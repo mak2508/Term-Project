@@ -28,8 +28,46 @@
 
 #Special thanks to professor Saquib for being so amazing.
 
+#best code viewing experience on sublime
 
 ################# Ensure you have pygame installed #################
+
+
+################# Class (+ 1 Function) definitions ################################
+# Input and output explained with function/class definition.
+# the code is broken up into a number of classes, and 1 function
+#Functions
+#1. load_images : this is the only function not in a class. It is used to load 
+# 				  individual photos from a folder.
+#
+#Classes
+#1. Background : this class takes care of game background.
+#2. Player : this class takes care of the player.
+#				Functions: 1 . Move: takes care of player
+#						   2 . change_orientation: changes the way the player faces 
+#3. Zombie : this class is for the zombies. Has all relevant attributes. 
+#4. Bullet : this class is for the bullets the player shoots. 
+#       All of the above classes have a update class also, which takes care of 
+#       updating relevant information of the object.
+#5. healthbar : this is for the healthbar to represent player health
+#6. Main: this is the actual game loop.
+#		Functions: 1.updateText : this updates text that is displayed
+#				   2.upgradeScreen : this takes care of the upgrade screen, which 
+# 									 opens after each round
+#				   3.killzombies : this kills all zombie objects that have 0 health
+#				   4.round : this maintains rounds, including spawning zombies
+#				   5.startMenu : this is the start menu
+#				   6.pauseMenu : this is the pause menu
+#				   7.gameOver : displays a game over screen when player dies
+#				   8.spawn_zombie : function used by round() to spawn individual 
+#									zombies
+#				   9.shoot : takes care of shooting
+#				   10.check_zombie_overlap : slightly displaces overlapping zombies
+#											 for better visual experience
+#				   11.check_collision : takes care of damagin zombie/player depending
+#										on event
+#				   12.redefine_all : redefines all necessary attributes for restart
+
 
 #importing libraries
 import pygame
@@ -350,7 +388,7 @@ class Bullets(pygame.sprite.Sprite):
 		#direction of bullet
 		self.direction = direction
 		#position of bullet (for collision function)
-		self.rect = pygame.Rect((rect[0], rect[1]) , (10, 10))
+		self.rect = pygame.Rect((rect[0] + 2, rect[1] + 11) , (10, 10))
 
 		#create background attribute to access boundary
 		self.background = background
@@ -448,7 +486,7 @@ class main():
 			('Coins: ' + str(self.coins)), True, pygame.color.Color('gold'))
 
 		#ammo for bullet shoot limit
-		self.ammo = 4000
+		self.ammo = 2500
 		#text to blit
 		self.ammo_text = pygame.font.SysFont('Consolas', 24).render(
 			('Ammo: ' + str(self.ammo)), True, pygame.color.Color('gray76'))
@@ -533,7 +571,7 @@ class main():
 		self.round_counter = 0
 
 		#for displaying how many zombies left for round end(initially 50)
-		self.zombies_remaining = 50
+		self.zombies_remaining = 20
 
 
 		#all the text to display continuously in main game
@@ -954,9 +992,9 @@ class main():
 						'upgrade(' +str((int(self.player.speed) - 9) * 300) + ')', True,
 						 pygame.color.Color('yellow'))
 					#if pressed and sufficient coins for purchase
-					if pygame.mouse.get_pressed()[0] == 1 and self.coins >= (int(self.player.speed) - 9) * 100:
+					if pygame.mouse.get_pressed()[0] == 1 and self.coins >= (int(self.player.speed) - 9) * 300:
 						#remove cost from coins
-						self.coins -= (int(self.player.speed) - 9) * 100
+						self.coins -= (int(self.player.speed) - 9) * 300
 						#raise player speed
 						self.player.speed += 1
 						#raise player speed copy (see player class for explanation)
@@ -1084,7 +1122,7 @@ class main():
 	def round(self):
 		#this maintains rounds and spawns zombies
 		#check if suffiecient zombies for round have spawned
-		if self.round_noSpawned >= 50 * self.round_RoundNo:
+		if self.round_noSpawned >= 20 * self.round_RoundNo:
 			#stop spawning zmobies
 			self.round_continueSpawn = False
 			#check if all zombies have been killed
@@ -1096,7 +1134,7 @@ class main():
 				self.round_counter = 0 #just a counter, to spawn zombies slowly
 				self.round_noKilled = 0 #how many zombies killed
 				self.round_continueSpawn = True
-				self.zombies_remaining = 50 * self.round_RoundNo
+				self.zombies_remaining = 20 * self.round_RoundNo
 				#increase health of player by 200 after each round
 				self.player.health += 200
 				if self.player.health > 1000:
@@ -1104,9 +1142,9 @@ class main():
 				pygame.draw.line(self.gameDisplay, pygame.color.Color('red'),
 				 (13,19), (14 + self.player.health * 0.4, 19), 16)
 				#increase coins
-				self.coins += 300
+				self.coins += (50 + self.round_RoundNo * 50)
 				#increase ammo and update ammo text
-				self.ammo += 1500
+				self.ammo += 1000
 				self.ammo_text = pygame.font.SysFont('Consolas', 24).render(
 					('Ammo: ' + str(self.ammo)), True, pygame.color.Color('gray76'))
 				self.updateText()
@@ -1554,7 +1592,7 @@ class main():
 		file.close()
 
 		self.coins = 0
-		self.ammo = 4000
+		self.ammo = 2500
 
 		#create player and add to all_sprites group
 		self.player = Player((self.background.size[0]/2,
@@ -1575,7 +1613,7 @@ class main():
 		self.round_noKilled = 0
 		self.round_counter = 0
 
-		self.zombies_remaining = 50
+		self.zombies_remaining = 20
 
 		#redefine texts
 		self.ammo_text = pygame.font.SysFont('Consolas', 24).render(
