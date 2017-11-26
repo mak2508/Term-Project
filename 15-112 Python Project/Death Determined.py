@@ -1618,6 +1618,8 @@ class main():
 		#redefine texts
 		self.ammo_text = pygame.font.SysFont('Consolas', 24).render(
 				('Ammo: ' + str(self.ammo)), True, pygame.color.Color('gray76'))
+		self.highscore_text = pygame.font.SysFont('Consolas', 16).render(
+			('Highscore : ' + str(self.highscore)), True, pygame.color.Color('white'))
 		self.updateText()
 
 
